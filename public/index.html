@@ -84,11 +84,27 @@
       wsClient.onopen = (event) => {
         // this code will run when the client successfully connects to a server
         console.log('WebSocket connection established!');
+        wsClient.send(JSON.stringify({type: "NEW_USER"}))
       }
 
       // TODO:
-      // Exercise 7: Respond to messages from the servery by defining the .onmessage event handler
+      // Exercise 7: Respond to messages from the server by defining the .onmessage event handler
+      wsClient.onmessage = (messageEvent) => {
+  const {type, payload} = JSON.parse(messageEvent.data);
+  // console.log('message received: ' + message);
       // Exercise 9: Parse custom message types, formatting each message based on the type.
+  switch (type) {
+    case 'NEW_MESSAGE':
+      showMessageReceived(payload.message)
+      break;
+    case 'NEW_USER':
+      showMessageReceived('New user joined!')
+      break;
+    default:
+      break
+  }
+
+};
 
 
 
@@ -119,7 +135,9 @@
 
       // TODO: 
       // Exercise 6: Send the message from the messageBox to the server
+      // wsClient.send(message)
       // Exercise 9: Send the message in a custom message object with .type and .payload properties
+      wsClient.send(JSON.stringify({type: "NEW_MESSAGE", payload: {message: message}}))
     }
 
     ////////////////////////////////////////////////

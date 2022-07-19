@@ -45,10 +45,18 @@ const wsServer = new WebSocket.Server({ server: server });
 wsServer.on("connection", (socket) => {
   // this code will run each time a new client connects to the server
   console.log("New client connected!");
-});
 // Exercise 6: Respond to client messages
+socket.on('message', (data) => {
+  console.log(data);
+})
 // Exercise 7: Send a message back to the client, echoing the message received
+socket.on('message', (data) => {
+  // the server will echo the message received back to the client
+  // socket.send('message received: ' + data); 
 // Exercise 8: Broadcast messages received to all other clients
+broadcast(data, socket)
+});
+});
 
 ///////////////////////////////////////////////
 ////////////// HELPER FUNCTIONS ///////////////
@@ -57,6 +65,11 @@ wsServer.on("connection", (socket) => {
 function broadcast(data, socketToOmit) {
   // TODO
   // Exercise 8: Implement the broadcast pattern. Exclude the emitting socket!
+  wsServer.clients.forEach(connectedClient => {
+    if(connectedClient.readyState === WebSocket.OPEN && connectedClient !== socketToOmit) {
+      connectedClient.send(data)
+    }
+  })
 }
 
 // Start the server listening on localhost:8080
