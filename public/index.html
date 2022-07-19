@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,6 +11,7 @@
   <script src="/utils/constants.js"></script>
   <title>ChatCademy</title>
 </head>
+
 <body>
   <h2>ChatCademy</h2>
   <div class="chat">
@@ -19,33 +21,33 @@
     <input type="text" id="messageBox" placeholder="Type your message here" />
     <button id="send" title="Send">➤</button>
   </form>
-  
-  <script> 
+
+  <script>
     ////////////////////////////////////////////////
     ////////////// VARIABLES ///////////////////////
     ////////////////////////////////////////////////
-  
+
     // This variable will hold the WebSocket client connection. 
     // Initialize in the init() function
-    let wsClient; 
-    
+    let wsClient;
+
     ////////////////////////////////////////////////
     //////////////// DOM SETUP /////////////////////
     ////////////////////////////////////////////////
-    
+
     const messageBox = document.querySelector('#messageBox');
     const messageForm = document.querySelector('#messageForm');
-      
+
     // Event handler when the client enters a message
-    messageForm.onsubmit = function(e) {
+    messageForm.onsubmit = function (e) {
       e.preventDefault();
-      
+
       // Get the message from the messageBox
       const message = messageBox.value;
       // Render the sent message on the client as your own and reset the messageBox
       showMessageSent(message);
       messageBox.value = '';
-      
+
       sendMessageToServer(message);
     }
 
@@ -67,14 +69,22 @@
       }
 
 
+
+
       // TODO: 
       // Exercise 4: Create a new WebSocket connection with the server using the ws protocol.
-      const URL = '??://localhost:' + PORT;
+      const URL = 'ws://localhost:' + PORT;
+      wsClient = new WebSocket(URL)
 
 
       // TODO:
       // Exercise 5: Respond to connections by defining the .onopen event handler.
-
+      // Client
+      // wsClient is an instance of the client-side WebSocket class
+      wsClient.onopen = (event) => {
+        // this code will run when the client successfully connects to a server
+        console.log('WebSocket connection established!');
+      }
 
       // TODO:
       // Exercise 7: Respond to messages from the servery by defining the .onmessage event handler
@@ -106,7 +116,7 @@
         showMessageReceived('No WebSocket connection :(');
         return;
       }
-      
+
       // TODO: 
       // Exercise 6: Send the message from the messageBox to the server
       // Exercise 9: Send the message in a custom message object with .type and .payload properties
@@ -117,15 +127,15 @@
     ////////////////////////////////////////////////
 
     const messages = document.querySelector('.chat');
-    
+
     // These functions are just aliases of the showNewMessage function
-    function showMessageSent(message) { 
-      showNewMessage(message, 'sending'); 
+    function showMessageSent(message) {
+      showNewMessage(message, 'sending');
     }
     function showMessageReceived(message) {
-      showNewMessage(message, 'receiving'); 
+      showNewMessage(message, 'receiving');
     }
-    
+
     // This function displays a message in the messages container node. 
     // className may either be 'mine' or 'yours' (see styles.css for the distinction)
     function showNewMessage(message, className) {
@@ -133,12 +143,12 @@
       const textNode = document.createElement('div');
       textNode.innerHTML = message;
       textNode.className = 'message';
-      
+
       // Wrap the text node in a message element
       const messageNode = document.createElement('div');
       messageNode.className = 'messages ' + className;
       messageNode.appendChild(textNode);
-      
+
       // Append the messageNode to the messages container element
       messages.appendChild(messageNode);
       messages.scrollTop = messages.scrollHeight;
@@ -149,4 +159,5 @@
 
   </script>
 </body>
+
 </html>
